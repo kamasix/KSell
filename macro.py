@@ -10,6 +10,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 import threading
 import shutil
+import webbrowser
 
 pydirectinput.PAUSE = 0.1
 
@@ -340,6 +341,12 @@ class ItemManagerUI:
         tk.Button(actions_frame, text="🔄 Refresh", command=self.load_items_gallery, bg="#3e3e42", fg="#ffffff",
                  font=("Segoe UI", 9), cursor="hand2", relief=tk.FLAT, bd=0, height=1,
                  activebackground="#4e4e52").pack(fill=tk.X, pady=2)
+        tk.Button(actions_frame, text="🎮 Roblox Profile", command=self.open_profile, bg="#3e3e42", fg="#ffffff",
+                 font=("Segoe UI", 9), cursor="hand2", relief=tk.FLAT, bd=0, height=1,
+                 activebackground="#4e4e52").pack(fill=tk.X, pady=2)
+        tk.Button(actions_frame, text="💬 Discord Server", command=self.open_discord, bg="#3e3e42", fg="#ffffff",
+                 font=("Segoe UI", 9), cursor="hand2", relief=tk.FLAT, bd=0, height=1,
+                 activebackground="#4e4e52").pack(fill=tk.X, pady=2)
         
         # Status section
         status_frame = tk.LabelFrame(right_panel, text="🎮 Status", 
@@ -420,12 +427,30 @@ class ItemManagerUI:
             except Exception as e:
                 messagebox.showerror("Error", f"Cannot copy file:\n{e}")
     
+    def open_profile(self):
+        webbrowser.open("https://www.roblox.com/users/556065198/profile")
+        self.update_status("✓ Opened Roblox profile")
+    
+    def open_discord(self):
+        webbrowser.open("https://discord.gg/PNchkgyMtZ")
+        self.update_status("✓ Opened Discord server")
+    
     def save_hotkey(self):
         new_hotkey = self.hotkey_entry.get().strip().lower()
         if new_hotkey and len(new_hotkey) <= 10:
+            # Remove old hotkey
+            try:
+                keyboard.remove_hotkey(self.hotkey)
+            except:
+                pass
+            
             self.hotkey = new_hotkey
             self.save_config()
-            self.update_status(f"✓ Hotkey set to {new_hotkey.upper()} - Restart to apply!")
+            
+            # Add new hotkey
+            keyboard.add_hotkey(self.hotkey, self.on_macro_start)
+            
+            self.update_status(f"✓ Hotkey changed to {new_hotkey.upper()}!")
         else:
             messagebox.showwarning("Invalid", "Enter a valid key (e.g., f1, f8, f10)")
     
@@ -435,7 +460,7 @@ class ItemManagerUI:
             if minutes > 0:
                 self.timer_minutes = minutes
                 self.save_config()
-                self.update_status(f"✓ Timer set to {minutes} min - Restart to apply!")
+                self.update_status(f"✓ Timer set to {minutes} minutes!")
             else:
                 messagebox.showwarning("Invalid", "Enter a positive number")
         except ValueError:
