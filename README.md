@@ -1,7 +1,7 @@
 # KSell - The Forge (Roblox)
 
 ## Demo
-![Demo](demo/demo.gif)
+![Demo](demo.gif)
 
 <p align="center">
   <img src="icon.png" alt="KSell" width="128" height="128">
@@ -98,4 +98,5 @@ Output: `dist/KSell.exe`
 ## Disclaimer
 
 Use at your own risk. May violate Roblox Terms of Service.
+
 
